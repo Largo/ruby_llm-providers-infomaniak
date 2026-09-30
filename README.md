@@ -1,87 +1,217 @@
 # ruby_llm-providers-infomaniak
 
-[RubyLLM](https://rubyllm.com) provider for [Infomaniak AI Tools](https://www.infomaniak.com/en/hosting/ai-tools),
-the models Infomaniak hosts in Switzerland (Kimi, Qwen, Apertus, Mistral, ...). It speaks Infomaniak's
-[OpenAI-compatible API](https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions):
-chat, streaming, tools, structured output, thinking on/off, images and embeddings.
+[![Gem Version](https://badge.fury.io/rb/ruby_llm-providers-infomaniak.svg)](https://rubygems.org/gems/ruby_llm-providers-infomaniak)
+[![tests](https://github.com/Largo/ruby_llm-providers-infomaniak/actions/workflows/tests.yml/badge.svg)](https://github.com/Largo/ruby_llm-providers-infomaniak/actions/workflows/tests.yml)
+
+**Open-weight models hosted in Switzerland, through the RubyLLM API you already know.**
+
+This gem adds [Infomaniak AI Tools](https://www.infomaniak.com/en/hosting/ai-tools) as a provider to
+[RubyLLM](https://rubyllm.com). Kimi, Qwen, Gemma, Mistral and Apertus run in Infomaniak's Swiss data
+centres; your Ruby code keeps using `RubyLLM.chat`, tools, schemas, streaming and embeddings as with any
+other provider.
+
+```ruby
+chat = RubyLLM.chat(model: 'moonshotai/Kimi-K2.6', provider: :infomaniak)
+chat.ask('Explain Ruby blocks in one sentence.').content
+# => "A Ruby block is a chunk of code you pass to a method ..."
+```
+
+- Chat, streaming, tool calling, structured output, image input, embeddings
+- Thinking on/off per request, with the model's reasoning on `response.thinking`
+- Only an API token to configure: the AI Tools product is looked up for you
+- A model catalog with context sizes and capabilities, refreshable at runtime
+- Irons out Infomaniak's differences from OpenAI's API, such as Kimi's broken JSON while thinking
+
+## Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Models](#models)
+- [Usage](#usage)
+- [How Infomaniak differs from OpenAI](#how-infomaniak-differs-from-openai)
+- [Development](#development)
+- [Releasing](#releasing)
 
 ## Installation
 
 ```ruby
+# Gemfile
 gem 'ruby_llm-providers-infomaniak', require: 'ruby_llm/providers/infomaniak'
 ```
 
+Requires Ruby 3.2+ and RubyLLM 2.x.
+
 ## Configuration
+
+You need an Infomaniak API token with the **AI Tools** scope (Infomaniak Manager > API tokens).
 
 ```ruby
 require 'ruby_llm/providers/infomaniak'
 
 RubyLLM.configure do |config|
-  config.infomaniak_api_key = ENV['INFOMANIAK_API_KEY']       # token with the AI Tools scope
-  config.infomaniak_product_id = ENV['INFOMANIAK_PRODUCT_ID'] # optional, see below
+  config.infomaniak_api_key = ENV['INFOMANIAK_API_KEY']
 end
 ```
 
-| Option | Required | |
+That is all. On first use the provider asks `GET /1/ai` which AI Tools product the token belongs to, and
+caches the answer per token.
+
+| Option | Default | |
 |---|---|---|
-| `infomaniak_api_key` | yes | API token with the AI Tools scope |
-| `infomaniak_product_id` | no | AI Tools product to bill. Left out, it is looked up once per token with `GET /1/ai`; a token that reaches several products must set it. |
-| `infomaniak_api_base` | no | Full base URL override, e.g. for a proxy. Default `https://api.infomaniak.com/2/ai/{product_id}/openai/v1` |
+| `infomaniak_api_key` | required | API token with the AI Tools scope |
+| `infomaniak_product_id` | looked up | The product to bill. Set it when the token reaches several products (the error lists them) or to skip the lookup |
+| `infomaniak_api_base` | `https://api.infomaniak.com/2/ai/{product_id}/openai/v1` | Override for a proxy or gateway |
 
-## Usage
+## Models
 
-```ruby
-chat = RubyLLM.chat(model: 'moonshotai/Kimi-K2.6', provider: :infomaniak)
-chat.ask('Hello!').content
+The chat and embedding models Infomaniak served on 2026-09-30, and how each behaved when probed.
+Your product lists its own with `bundle exec rake models`, or live with
+`RubyLLM::Providers::Infomaniak.refresh_models!`.
 
-chat.ask('Tell me a story') { |chunk| print chunk.content }        # streaming
-chat.with_tools(Weather).ask('Weather in Zurich?')                  # tools
-chat.with_schema(MySchema).ask('...').parsed                        # structured output
-chat.ask('What is in this picture?', with: 'photo.png')             # images (vision models)
+| Model | Context | Images | Thinking |
+|---|---|---|---|
+| `moonshotai/Kimi-K2.6` (beta) | 256K | yes | on by default |
+| `Qwen/Qwen3.5-397B-A17B-FP8` (beta) | 200K | yes | on by default |
+| `Qwen/Qwen3.5-122B-A10B-FP8` | 200K | yes | on by default |
+| `google/gemma-4-31B-it` | 100K | yes | off, opt in with an effort |
+| `mistralai/Mistral-Small-4-119B-2603` | 256K | yes | off, opt in with an effort |
+| `mistralai/Ministral-3-14B-Instruct-2512` | 100K | yes | none |
+| `swiss-ai/Apertus-v1.5-70B` (beta) | 100K | yes | none |
 
-response = chat.ask('Is 1001 prime?')
-response.thinking&.text                                             # thinking is on by default
-chat.with_thinking(effort: :none).ask('Quick answer please')        # thinking off
+| Embedding model | Input tokens |
+|---|---|
+| `Qwen/Qwen3-Embedding-8B` | 8192 |
+| `bge_multilingual_gemma2` | 8000 |
+| `mini_lm_l12_v2` | 128 |
 
-RubyLLM.embed('Ruby', model: embedding_model_id, provider: :infomaniak).vectors # an embedding model your product serves
-```
+Infomaniak also lists image generation (Flux, Photomaker), transcription (Whisper) and rerankers
+(`BAAI/bge-reranker-v2-m3`, `Qwen/Qwen3-Reranker-0.6B`). They live on other endpoints this gem does not
+cover yet.
 
-Any model id your product serves works as given (`provider: :infomaniak` is enough). The gem also ships
-a model catalog, `models.json`, with context sizes and capabilities; once a model is in it,
-`with_thinking` and `with_thinking(false)` work too, and `RubyLLM.models.by_provider(:infomaniak)` lists it.
+### The model catalog
 
-The catalog is a snapshot from the gem release. To pick up models Infomaniak added since, load the live
-list at boot (two API calls; `RubyLLM.models.refresh!` skips providers that ship a catalog):
+Any model id your product serves works as given, catalog or not. The gem ships a catalog, `models.json`,
+so that ruby_llm also knows each model's context size and capabilities. That enables:
+
+- `with_thinking` and `with_thinking(false)`, which need to know how a model switches thinking
+- `RubyLLM.chat(model: 'moonshotai/Kimi-K2.6')` without `provider:`
+- `RubyLLM.models.by_provider(:infomaniak)` without a network call
+
+The catalog is a snapshot from the gem release. To know about models Infomaniak added since, load the
+live list at boot (two API calls):
 
 ```ruby
 RubyLLM::Providers::Infomaniak.refresh_models!
 ```
 
-### Dialect notes
+`RubyLLM.models.refresh!` does not do this: it skips providers that ship their own catalog.
 
-- `reasoning_effort` is an on/off switch at Infomaniak: `:none` turns thinking off, any other effort turns it
-  on. `:minimal` is sent as `low`, `:xhigh` and `:max` as `high`. Apertus and Mistral have no thinking mode.
-- Output limits go out as `max_completion_tokens`, instructions with the `system` role.
-- Images are sent inline; audio and PDF attachments are rejected before the request (text files are inlined).
-- `with_end_user('id')` is sent as `user`.
+## Usage
 
-## Trying it out
+### Chat and streaming
+
+```ruby
+chat = RubyLLM.chat(model: 'moonshotai/Kimi-K2.6', provider: :infomaniak)
+
+chat.with_instructions('Answer like a Swiss train conductor.')
+chat.ask('When does the next train to Bern leave?').content
+
+chat.ask('Tell me a story about a marmot.') { |chunk| print chunk.content }
+```
+
+### Tools
+
+```ruby
+class Weather < RubyLLM::Tool
+  description 'Current weather for a city'
+  parameter :city, description: 'City name'
+
+  def execute(city:) = WeatherService.current(city)
+end
+
+chat.with_tools(Weather).ask('Do I need an umbrella in Lausanne today?').content
+```
+
+### Structured output
+
+```ruby
+schema = {
+  type: 'object',
+  properties: { city: { type: 'string' }, population: { type: 'integer' } },
+  required: %w[city population],
+  additionalProperties: false
+}
+
+chat.with_schema(schema).ask('Largest city in Switzerland?').parsed
+# => {"city" => "Zurich", "population" => 443000}
+```
+
+### Thinking
+
+Kimi and Qwen think before they answer, unless told not to. The reasoning comes back separately from the
+answer:
+
+```ruby
+response = chat.ask('Is 1001 prime?')
+response.thinking&.text   # the model's reasoning
+response.content          # the answer
+
+chat.with_thinking(effort: :none).ask('Quick: 17 * 23?')   # thinking off: faster, cheaper
+RubyLLM.chat(model: 'google/gemma-4-31B-it', provider: :infomaniak)
+       .with_thinking(effort: :high).ask('Plan a 3-day Ticino trip.')   # thinking on
+```
+
+With the model in the catalog, `with_thinking` and `with_thinking(false)` work too.
+
+### Images
+
+```ruby
+chat.ask('What is on this receipt?', with: 'receipt.jpg').content
+```
+
+### Embeddings
+
+```ruby
+RubyLLM.embed('Grüezi mitenand', model: 'Qwen/Qwen3-Embedding-8B', provider: :infomaniak).vectors
+```
+
+## How Infomaniak differs from OpenAI
+
+The gem handles these, so the RubyLLM API behaves as usual:
+
+| | What Infomaniak does | What the gem does |
+|---|---|---|
+| Thinking | `reasoning_effort` is an on/off switch: `none` or `low`/`medium`/`high` | `:none` turns thinking off; `:minimal` is sent as `low`, `:xhigh` and `:max` as `high` |
+| Kimi + schema | While thinking, Kimi answers `{{ ... }` instead of JSON | Kimi schema requests go out with thinking off, unless you ask for thinking, which logs a warning |
+| System prompt | `system` role, not OpenAI's `developer` | Sends `system` |
+| Output limit | `max_completion_tokens` | `with_max_output_tokens` maps to it |
+| Attachments | Images inline; no audio, no PDF | Audio and PDFs raise `UnsupportedAttachmentError` before sending; text files are inlined |
+| End user | `user` field | `with_end_user('id')` is sent as `user` |
+| Prompt caching | Repeated prompt prefixes answer faster, but no cached-token counts come back and `prompt_cache_key` has no visible effect | `with_caching` options are not sent; keep long shared context (instructions, documents) at the start of the conversation to benefit |
+| Errors | `{"error": {"code", "description"}}` on its own endpoints | The description ends up in the `RubyLLM::Error` message |
+
+## Development
 
 ```sh
 bundle install
-cp test/.env.example test/.env     # then put your API key in test/.env
-bundle exec ruby bin/console       # IRB with chat, Weather and models helpers
-bundle exec rake live              # live tests against the API
-bundle exec rake models            # refresh models.json from the API
+cp test/.env.example test/.env    # put your API token in test/.env (gitignored)
 ```
 
-`test/.env` is gitignored. `bundle exec rake test` runs the offline tests (HTTP stubbed with WebMock),
-which is what CI runs.
+| Command | |
+|---|---|
+| `bundle exec ruby bin/console` | IRB with `chat`, `models` and a `Weather` tool, configured from `test/.env` |
+| `bundle exec rake test` | Offline tests, all HTTP stubbed with WebMock. What CI runs |
+| `bundle exec rake live` | The same features against the real API, with your token |
+| `bundle exec rake models` | Rebuilds `models.json` from your product's model list |
+
+`test/.env` also takes `INFOMANIAK_MODEL` (the console and live-test model, default Kimi-K2.6),
+`INFOMANIAK_EMBEDDING_MODEL` (adds embeddings to `rake live`) and `RUBYLLM_DEBUG=1` (logs every request).
 
 ## Releasing
 
-See [RELEASING.md](RELEASING.md): tags publish to RubyGems through trusted publishing.
+Tags publish to RubyGems through trusted publishing, without a stored API key. See
+[RELEASING.md](RELEASING.md).
 
 ## License
 
-MIT
+MIT. Not affiliated with Infomaniak.
