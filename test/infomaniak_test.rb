@@ -237,6 +237,30 @@ class InfomaniakModelsTest < Minitest::Test
     RubyLLM.models.instance_variable_set(:@models, before)
   end
 
+  def test_rerankers_from_the_account_catalog
+    stub_request(:get, "#{API_BASE}/models").to_return(json(object: 'list', data: [{ id: MODEL }]))
+    stub_request(:get, "#{API_HOST}/1/ai/models").to_return(json(result: 'success', data: [
+      { name: MODEL, type: 'llm' }, { name: 'BAAI/bge-reranker-v2-m3', type: 'reranker', max_token_input: 8192 },
+      { name: 'flux', type: 'image' }
+    ]))
+
+    assert_equal [[MODEL, :chat], ['BAAI/bge-reranker-v2-m3', :rerank]], provider.list_models.map { [_1.id, _1.type] }
+  end
+
+  def test_rerank
+    stub = stub_request(:post, "#{API_HOST}/2/ai/#{PRODUCT_ID}/cohere/v2/rerank")
+           .with(body: { model: 'BAAI/bge-reranker-v2-m3', query: 'densest metal', documents: %w[Tin Osmium], top_n: 2 })
+           .to_return(json(id: 'rerank-1', model: 'BAAI/bge-reranker-v2-m3', usage: { total_tokens: 21 },
+                           results: [{ index: 1, relevance_score: 0.93 }, { index: 0, relevance_score: 0.02 }]))
+
+    rerank = RubyLLM.rerank('densest metal', %w[Tin Osmium], model: 'BAAI/bge-reranker-v2-m3', provider: :infomaniak,
+                                                              top_n: 2)
+
+    assert_requested stub
+    assert_equal [%w[Osmium 0.93], %w[Tin 0.02]], rerank.results.map { [_1.document, _1.score.to_s] }
+    assert_equal 21, rerank.tokens.input
+  end
+
   def test_embeddings
     stub_request(:post, "#{API_BASE}/embeddings").to_return(json(
       object: 'list', model: 'bge_multilingual_gemma2',

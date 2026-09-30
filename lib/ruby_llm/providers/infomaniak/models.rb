@@ -18,11 +18,19 @@ module RubyLLM
         /ix
         EMBEDDING = /embed|bge|\be5\b|gte|mini_?lm/i
 
+        # Catalog types served outside the OpenAI endpoint, so missing from its list.
+        OTHER_ENDPOINT_TYPES = %w[reranker].freeze
+
         def list_models
           details = catalog_details
-          listed_models(@connection.get(models_url)).map do |entry|
-            build_model(entry, details_for(details, entry['id']))
+          listed = listed_models(@connection.get(models_url))
+          listed_ids = listed.map { |entry| entry['id'].to_s.downcase }
+          elsewhere = details.values.select do |entry|
+            OTHER_ENDPOINT_TYPES.include?(entry['type']) && !listed_ids.include?(entry['name'].to_s.downcase)
           end
+
+          listed.map { |entry| build_model(entry, details_for(details, entry['id'])) } +
+            elsewhere.map { |entry| build_model({ 'id' => entry['name'] }, entry) }
         end
 
         private

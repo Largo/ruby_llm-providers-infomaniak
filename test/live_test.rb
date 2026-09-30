@@ -61,6 +61,15 @@ class InfomaniakLiveTest < Minitest::Test
     assert_includes ids, INFOMANIAK_MODEL
   end
 
+  def test_rerank
+    documents = ['Tin has the most stable isotopes.', 'Osmium is the densest metal.', 'Lithium is the least dense metal.']
+    rerank = RubyLLM.rerank('Which metal is the densest?', documents, model: 'BAAI/bge-reranker-v2-m3',
+                                                                      provider: :infomaniak)
+
+    assert_equal 'Osmium is the densest metal.', rerank.results.first.document
+    assert_operator rerank.results.first.score, :>, rerank.results.last.score
+  end
+
   def test_embeddings
     skip 'Set INFOMANIAK_EMBEDDING_MODEL in test/.env' unless INFOMANIAK_EMBEDDING_MODEL
 

@@ -4,11 +4,13 @@ require 'ruby_llm'
 require_relative 'infomaniak/version'
 require_relative 'infomaniak/chat'
 require_relative 'infomaniak/models'
+require_relative 'infomaniak/rerank'
 
 module RubyLLM
   module Providers
     # Infomaniak AI Tools: OpenAI-compatible chat completions, embeddings and
-    # model listing under https://api.infomaniak.com/2/ai/{product_id}/openai/v1.
+    # model listing under https://api.infomaniak.com/2/ai/{product_id}/openai/v1,
+    # reranking under .../{product_id}/cohere/v2.
     class Infomaniak < Provider
       API_HOST = 'https://api.infomaniak.com'
 
@@ -19,6 +21,11 @@ module RubyLLM
       end
 
       protocol :chat_completions, ChatCompletions
+      protocol :rerank, CohereRerank
+
+      def protocol_for(model, operation: nil, **)
+        operation == :rerank ? protocols[:rerank] : super
+      end
 
       def api_base
         @config.infomaniak_api_base || "#{API_HOST}/2/ai/#{product_id}/openai/v1"
