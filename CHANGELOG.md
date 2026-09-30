@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 - Reranking (`RubyLLM.rerank`) with `BAAI/bge-reranker-v2-m3` and `Qwen/Qwen3-Reranker-0.6B`, on the
   Cohere-compatible endpoint.
