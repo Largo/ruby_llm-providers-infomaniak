@@ -1,0 +1,130 @@
+<!doctype html>
+<!--
+  Social card for ruby_llm-providers-infomaniak. Screenshot the page at its exact size:
+    card.html                 1600x900  (16:9)  -> twitter-card.png
+    card.html?format=github   1600x800  (2:1)   -> github-social.png, the repo's social preview
+  e.g. headless Chrome/Edge:
+    msedge --headless --window-size=1600,900 --screenshot=twitter-card.png "file:///.../docs/social/card.html"
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ruby_llm-providers-infomaniak</title>
+<script>
+  if (new URLSearchParams(location.search).get('format') === 'github') document.documentElement.classList.add('github');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-1: #0a0e1c; --bg-2: #151b34;
+    --ruby: #e0115f; --blue: #3d8bff;
+    --text: #e8ebf5; --muted: #9aa3c0;
+    --win: #0e1326; --win-bar: #121936; --line: rgba(255, 255, 255, 0.08);
+    --t-comment: #6c7699; --t-keyword: #c792ea; --t-const: #ffcb6b; --t-method: #82aaff;
+    --t-string: #c3e88d; --t-symbol: #f78c6c; --t-param: #f07178; --t-punct: #89ddff; --t-num: #f78c6c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 900px; }
+  body {
+    background:
+      radial-gradient(900px 520px at 8% -10%, rgba(224, 17, 95, 0.28), transparent 60%),
+      radial-gradient(900px 600px at 105% 110%, rgba(61, 139, 255, 0.28), transparent 60%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .card { width: 1600px; height: 900px; padding: 56px 96px 48px; display: flex; flex-direction: column; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px; border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06); border: 1px solid var(--line);
+    font: 600 17px 'JetBrains Mono', monospace; color: var(--muted); margin-bottom: 18px;
+  }
+  .pill .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ruby); box-shadow: 0 0 12px var(--ruby); }
+  h1 { font-size: 54px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.05; }
+  h1 .accent {
+    background: linear-gradient(90deg, #ff4d8d, #ff9a62); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .flag { display: inline-block; width: 44px; height: 44px; border-radius: 9px; background: #e3342f; position: relative; vertical-align: -4px; margin-left: 14px; }
+  .flag::before, .flag::after { content: ''; position: absolute; background: #fff; }
+  .flag::before { width: 26px; height: 8px; left: 9px; top: 18px; }
+  .flag::after { width: 8px; height: 26px; left: 18px; top: 9px; }
+  .install {
+    font: 500 21px 'JetBrains Mono', monospace; color: var(--text); white-space: nowrap;
+    padding: 14px 20px; border-radius: 12px; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line);
+  }
+  .install .prompt { color: var(--ruby); margin-right: 10px; }
+
+  .window {
+    margin-top: 34px; flex: 1; border-radius: 18px; background: var(--win); border: 1px solid var(--line);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.02) inset; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .bar { flex-shrink: 0; height: 46px; background: var(--win-bar); border-bottom: 1px solid var(--line); display: flex; align-items: center; padding: 0 20px; gap: 9px; }
+  .bar i { width: 13px; height: 13px; border-radius: 50%; display: block; }
+  .bar i:nth-child(1) { background: #ff5f57; } .bar i:nth-child(2) { background: #febc2e; } .bar i:nth-child(3) { background: #28c840; }
+  .bar span { margin-left: 16px; font: 500 16px 'JetBrains Mono', monospace; color: var(--muted); }
+  pre { margin: auto 0; padding: 26px 34px; font: 400 24px/1.66 'JetBrains Mono', monospace; color: var(--text); counter-reset: line; }
+  pre .l { white-space: pre; }
+  pre .l::before { counter-increment: line; content: counter(line); display: inline-block; width: 34px; margin-right: 26px; text-align: right; color: #3a4266; }
+  .c { color: var(--t-comment); font-style: italic; } .k { color: var(--t-keyword); } .n { color: var(--t-const); }
+  .m { color: var(--t-method); } .s { color: var(--t-string); } .y { color: var(--t-symbol); } .p { color: var(--t-punct); }
+  .v { color: var(--t-param); } .d { color: var(--t-num); }
+
+  footer { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font: 600 17px 'Inter', sans-serif; color: var(--text); padding: 8px 15px; border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+  }
+  .chip b { color: #ff7aa8; font-weight: 700; }
+
+  /* 2:1 for GitHub's social preview */
+  html.github, html.github body, html.github .card { height: 800px; }
+  html.github .card { padding: 42px 96px 36px; }
+  html.github .window { margin-top: 24px; }
+  html.github pre { padding: 18px 34px; font-size: 22px; line-height: 1.45; }
+  html.github footer { margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <header>
+    <div>
+      <div class="pill"><span class="dot"></span>RubyLLM provider · v0.2.0</div>
+      <h1>Swiss-hosted open models,<br><span class="accent">in plain Ruby.</span><span class="flag" aria-hidden="true"></span></h1>
+    </div>
+    <div class="install"><span class="prompt">$</span>gem install ruby_llm-providers-infomaniak</div>
+  </header>
+
+  <div class="window">
+    <div class="bar"><i></i><i></i><i></i><span>infomaniak.rb</span></div>
+<pre><span class="l"><span class="k">require</span> <span class="s">'ruby_llm/providers/infomaniak'</span></span>
+<span class="l"><span class="n">RubyLLM</span><span class="p">.</span><span class="m">configure</span> <span class="p">{</span> <span class="p">|</span><span class="v">c</span><span class="p">|</span> <span class="v">c</span><span class="p">.</span><span class="m">infomaniak_api_key</span> <span class="p">=</span> <span class="n">ENV</span><span class="p">[</span><span class="s">'INFOMANIAK_API_KEY'</span><span class="p">]</span> <span class="p">}</span></span>
+<span class="l"> </span>
+<span class="l">chat <span class="p">=</span> <span class="n">RubyLLM</span><span class="p">.</span><span class="m">chat</span><span class="p">(</span><span class="y">model:</span> <span class="s">'moonshotai/Kimi-K2.6'</span><span class="p">,</span> <span class="y">provider:</span> <span class="y">:infomaniak</span><span class="p">)</span></span>
+<span class="l">chat<span class="p">.</span><span class="m">ask</span><span class="p">(</span><span class="s">'Grüezi! Why do people love Ruby?'</span><span class="p">)</span> <span class="p">{</span> <span class="p">|</span><span class="v">chunk</span><span class="p">|</span> <span class="m">print</span> <span class="v">chunk</span><span class="p">.</span><span class="m">content</span> <span class="p">}</span></span>
+<span class="l"> </span>
+<span class="l">chat<span class="p">.</span><span class="m">with_tools</span><span class="p">(</span><span class="n">Weather</span><span class="p">).</span><span class="m">ask</span><span class="p">(</span><span class="s">'Do I need an umbrella in Zurich?'</span><span class="p">)</span></span>
+<span class="l">chat<span class="p">.</span><span class="m">with_schema</span><span class="p">(</span><span class="n">Receipt</span><span class="p">).</span><span class="m">ask</span><span class="p">(</span><span class="s">'Extract the total'</span><span class="p">,</span> <span class="y">with:</span> <span class="s">'receipt.jpg'</span><span class="p">).</span><span class="m">parsed</span></span>
+<span class="l"><span class="n">RubyLLM</span><span class="p">.</span><span class="m">paint</span><span class="p">(</span><span class="s">'A red train on a viaduct'</span><span class="p">,</span> <span class="y">model:</span> <span class="s">'flux'</span><span class="p">,</span> <span class="y">provider:</span> <span class="y">:infomaniak</span><span class="p">)</span></span>
+<span class="l"> </span>
+<span class="l">chat<span class="p">.</span><span class="m">cost</span><span class="p">.</span><span class="m">total</span> <span class="c"># =&gt; 0.0012 (CHF)</span></span></pre>
+  </div>
+
+  <footer>
+    <span class="chip">Chat &amp; streaming</span>
+    <span class="chip">Tools</span>
+    <span class="chip">Structured output</span>
+    <span class="chip">Thinking on/off</span>
+    <span class="chip">Vision</span>
+    <span class="chip">Embeddings</span>
+    <span class="chip">Rerank</span>
+    <span class="chip">Flux images</span>
+    <span class="chip">Whisper</span>
+    <span class="chip"><b>CHF</b> costs</span>
+  </footer>
+</div>
+</body>
+</html>

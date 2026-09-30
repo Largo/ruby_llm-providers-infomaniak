@@ -3,6 +3,8 @@
 [![Gem Version](https://badge.fury.io/rb/ruby_llm-providers-infomaniak.svg)](https://rubygems.org/gems/ruby_llm-providers-infomaniak)
 [![tests](https://github.com/Largo/ruby_llm-providers-infomaniak/actions/workflows/tests.yml/badge.svg)](https://github.com/Largo/ruby_llm-providers-infomaniak/actions/workflows/tests.yml)
 
+![ruby_llm-providers-infomaniak: Swiss-hosted open models, in plain Ruby](docs/social/twitter-card.png)
+
 **Open-weight models hosted in Switzerland, through the RubyLLM API you already know.**
 
 This gem adds [Infomaniak AI Tools](https://www.infomaniak.com/en/hosting/ai-tools) as a provider to
