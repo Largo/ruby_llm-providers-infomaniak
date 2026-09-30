@@ -51,6 +51,14 @@
   .flag::before, .flag::after { content: ''; position: absolute; background: #fff; }
   .flag::before { width: 26px; height: 8px; left: 9px; top: 18px; }
   .flag::after { width: 8px; height: 26px; left: 18px; top: 9px; }
+  .side { display: flex; flex-direction: column; align-items: flex-end; gap: 22px; }
+  .byline { display: flex; align-items: center; gap: 14px; }
+  .byline img {
+    width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.18); box-shadow: 0 0 0 4px rgba(224, 17, 95, 0.18);
+  }
+  .byline .name { font: 700 21px 'Inter', sans-serif; }
+  .byline .handle { font: 500 17px 'JetBrains Mono', monospace; color: var(--muted); margin-top: 2px; }
   .install {
     font: 500 21px 'JetBrains Mono', monospace; color: var(--text); white-space: nowrap;
     padding: 14px 20px; border-radius: 12px; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line);
@@ -95,7 +103,13 @@
       <div class="pill"><span class="dot"></span>RubyLLM provider · v0.2.0</div>
       <h1>Swiss-hosted open models,<br><span class="accent">in plain Ruby.</span><span class="flag" aria-hidden="true"></span></h1>
     </div>
-    <div class="install"><span class="prompt">$</span>gem install ruby_llm-providers-infomaniak</div>
+    <div class="side">
+      <div class="byline">
+        <img src="avatar.jpg" alt="">
+        <div><div class="name">Andi Idogawa</div><div class="handle">@largo</div></div>
+      </div>
+      <div class="install"><span class="prompt">$</span>gem install ruby_llm-providers-infomaniak</div>
+    </div>
   </header>
 
   <div class="window">
