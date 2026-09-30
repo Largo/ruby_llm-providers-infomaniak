@@ -24,6 +24,7 @@ class InfomaniakLiveTest < Minitest::Test
     assert_includes response.content, '4'
     assert_operator response.tokens.input.to_i, :>, 0
     assert_operator response.tokens.output.to_i, :>, 0
+    assert_operator response.cost.total.to_f, :>, 0, 'expected a CHF cost from the catalog prices'
   end
 
   def test_streaming

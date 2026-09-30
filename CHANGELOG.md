@@ -8,6 +8,8 @@
 - Transcription (`RubyLLM.transcribe`) with Whisper, polling Infomaniak's asynchronous results
   (`infomaniak_poll_interval`).
 - The model catalog now also lists the rerankers, Flux and Whisper.
+- Pricing: the catalog carries Infomaniak's CHF list prices, so `response.cost` works for chat,
+  embeddings and rerank (in CHF). Flux and Whisper per-minute prices are in the model metadata.
 - Author name: Andi Idogawa.
 
 ## 0.1.0

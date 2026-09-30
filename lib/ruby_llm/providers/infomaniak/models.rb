@@ -75,7 +75,8 @@ module RubyLLM
             capabilities: capabilities_for(type, vision:, thinking:),
             modalities: modalities_for(type, vision:),
             reasoning_options: thinking ? [EFFORT_OPTION] : [],
-            metadata: metadata_for(entry, details)
+            pricing: Pricing.pricing_for(id),
+            metadata: metadata_for(entry, details).merge(Pricing.metadata_for(id))
           )
         end
 

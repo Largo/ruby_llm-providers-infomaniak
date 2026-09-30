@@ -3,6 +3,7 @@
 require 'ruby_llm'
 require_relative 'infomaniak/version'
 require_relative 'infomaniak/chat'
+require_relative 'infomaniak/pricing'
 require_relative 'infomaniak/models'
 require_relative 'infomaniak/rerank'
 require_relative 'infomaniak/media'

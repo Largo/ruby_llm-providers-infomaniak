@@ -205,6 +205,9 @@ class InfomaniakModelsTest < Minitest::Test
     assert kimi.supports?(:reasoning)
     assert_equal %w[none low medium high], kimi.reasoning_option_values(:effort)
     assert kimi.metadata[:beta]
+    assert_equal [0.6, 3.0, 'CHF'], [kimi.price(:input), kimi.price(:output), kimi.metadata[:currency]]
+    assert_in_delta 0.000_0222, kimi.cost_for(RubyLLM::Tokens.new(input: 12, output: 5)).total
+    assert_nil apertus.price(:input), 'ids missing from the price list stay unpriced'
     assert_equal :chat, apertus.type
     refute apertus.supports?(:reasoning)
     assert_equal :embedding, bge.type

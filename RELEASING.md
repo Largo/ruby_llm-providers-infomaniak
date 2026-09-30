@@ -34,7 +34,9 @@ the workflow trades a GitHub OIDC token for a short-lived RubyGems key, so no AP
 ## Each release
 
 1. Bump `VERSION` in `lib/ruby_llm/providers/infomaniak/version.rb` and add a section to `CHANGELOG.md`.
-2. Optionally refresh the model catalog: `bundle exec rake models` (needs `test/.env`), and commit `models.json`.
+2. Check the prices on <https://www.infomaniak.com/en/hosting/ai-services/prices> against
+   `lib/ruby_llm/providers/infomaniak/pricing.rb` (update `AS_OF` too), then refresh the model catalog:
+   `bundle exec rake models` (needs `test/.env`), and commit `models.json`.
 3. Commit, then tag and push:
 
    ```sh

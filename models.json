@@ -17,7 +17,13 @@
       ]
     },
     "capabilities": [],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.065
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "embedding",
@@ -26,7 +32,9 @@
       "status": "coming_soon",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   },
   {
@@ -47,7 +55,13 @@
       ]
     },
     "capabilities": [],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "embedding",
@@ -56,7 +70,9 @@
       "status": "coming_soon",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   },
   {
@@ -77,7 +93,13 @@
       ]
     },
     "capabilities": [],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.07
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "embedding",
@@ -85,7 +107,9 @@
       "status": "coming_soon",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   },
   {
@@ -113,7 +137,14 @@
       "json_mode",
       "vision"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.3,
+          "output_per_million": 0.4
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -121,7 +152,9 @@
       "status": "ready",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   },
   {
@@ -150,7 +183,14 @@
       "vision",
       "reasoning"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.4,
+          "output_per_million": 3.2
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -159,6 +199,8 @@
       "beta": false,
       "coder": false,
       "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
       "reasoning_options": [
         {
           "type": "effort",
@@ -198,7 +240,14 @@
       "vision",
       "reasoning"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.4
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -207,6 +256,8 @@
       "beta": false,
       "coder": false,
       "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
       "reasoning_options": [
         {
           "type": "effort",
@@ -246,7 +297,14 @@
       "vision",
       "reasoning"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.6,
+          "output_per_million": 3.0
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -255,6 +313,8 @@
       "beta": true,
       "coder": false,
       "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
       "reasoning_options": [
         {
           "type": "effort",
@@ -294,7 +354,14 @@
       "vision",
       "reasoning"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.75
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -303,6 +370,8 @@
       "beta": false,
       "coder": false,
       "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
       "reasoning_options": [
         {
           "type": "effort",
@@ -342,7 +411,14 @@
       "vision",
       "reasoning"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.8,
+          "output_per_million": 3.6
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -351,6 +427,8 @@
       "beta": true,
       "coder": false,
       "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
       "reasoning_options": [
         {
           "type": "effort",
@@ -389,7 +467,14 @@
       "json_mode",
       "vision"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.7,
+          "output_per_million": 2.5
+        }
+      }
+    },
     "metadata": {
       "owned_by": "system",
       "type": "llm",
@@ -397,7 +482,9 @@
       "status": "coming_soon",
       "beta": true,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   },
   {
@@ -426,7 +513,10 @@
       "status": "ready",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/1/ai/%7Bproduct_id%7D/openai/audio/transcriptions"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/1/ai/%7Bproduct_id%7D/openai/audio/transcriptions",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
+      "price_per_minute": 0.006
     }
   },
   {
@@ -455,7 +545,10 @@
       "status": "ready",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/1/ai/%7Bproduct_id%7D/openai/images/generations"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/1/ai/%7Bproduct_id%7D/openai/images/generations",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30",
+      "price_per_minute": 0.3
     }
   },
   {
@@ -476,14 +569,22 @@
       ]
     },
     "capabilities": [],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.01
+        }
+      }
+    },
     "metadata": {
       "type": "reranker",
       "description": "BAAI/bge-reranker-v2-m3",
       "status": "coming_soon",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/cohere/v2/rerank"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/cohere/v2/rerank",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   },
   {
@@ -504,14 +605,22 @@
       ]
     },
     "capabilities": [],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.009
+        }
+      }
+    },
     "metadata": {
       "type": "reranker",
       "description": "Qwen/Qwen3-Reranker-0.6B",
       "status": "coming_soon",
       "beta": false,
       "coder": false,
-      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/cohere/v2/rerank"
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/cohere/v2/rerank",
+      "currency": "CHF",
+      "prices_as_of": "2026-09-30"
     }
   }
 ]

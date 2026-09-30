@@ -70,27 +70,28 @@ The chat and embedding models Infomaniak served on 2026-09-30, and how each beha
 Your product lists its own with `bundle exec rake models`, or live with
 `RubyLLM::Providers::Infomaniak.refresh_models!`.
 
-| Model | Context | Images | Thinking |
-|---|---|---|---|
-| `moonshotai/Kimi-K2.6` (beta) | 256K | yes | on by default |
-| `Qwen/Qwen3.5-397B-A17B-FP8` (beta) | 200K | yes | on by default |
-| `Qwen/Qwen3.5-122B-A10B-FP8` | 200K | yes | on by default |
-| `google/gemma-4-31B-it` | 100K | yes | off, opt in with an effort |
-| `mistralai/Mistral-Small-4-119B-2603` | 256K | yes | off, opt in with an effort |
-| `mistralai/Ministral-3-14B-Instruct-2512` | 100K | yes | none |
-| `swiss-ai/Apertus-v1.5-70B` (beta) | 100K | yes | none |
+| Model | Context | Images | Thinking | CHF per 1M tokens, in / out |
+|---|---|---|---|---|
+| `moonshotai/Kimi-K2.6` (beta) | 256K | yes | on by default | 0.60 / 3.00 |
+| `Qwen/Qwen3.5-397B-A17B-FP8` (beta) | 200K | yes | on by default | 0.80 / 3.60 |
+| `Qwen/Qwen3.5-122B-A10B-FP8` | 200K | yes | on by default | 0.40 / 3.20 |
+| `google/gemma-4-31B-it` | 100K | yes | off, opt in with an effort | 0.20 / 0.40 |
+| `mistralai/Mistral-Small-4-119B-2603` | 256K | yes | off, opt in with an effort | 0.20 / 0.75 |
+| `mistralai/Ministral-3-14B-Instruct-2512` | 100K | yes | none | 0.30 / 0.40 |
+| `swiss-ai/Apertus-v1.5-70B` (beta) | 100K | yes | none | 0.70 / 2.50 |
 
-| Embedding model | Input tokens |
-|---|---|
-| `Qwen/Qwen3-Embedding-8B` | 8192 |
-| `bge_multilingual_gemma2` | 8000 |
-| `mini_lm_l12_v2` | 128 |
+| Embedding model | Input tokens | CHF per 1M tokens |
+|---|---|---|
+| `Qwen/Qwen3-Embedding-8B` | 8192 | 0.07 |
+| `bge_multilingual_gemma2` | 8000 | 0.065 |
+| `mini_lm_l12_v2` | 128 | free |
 
-| Other models | For |
-|---|---|
-| `BAAI/bge-reranker-v2-m3`, `Qwen/Qwen3-Reranker-0.6B` | `RubyLLM.rerank` |
-| `flux` | `RubyLLM.paint`, returns JPEG |
-| `whisper` | `RubyLLM.transcribe` |
+| Other models | For | CHF |
+|---|---|---|
+| `BAAI/bge-reranker-v2-m3` | `RubyLLM.rerank` | 0.01 per 1M tokens |
+| `Qwen/Qwen3-Reranker-0.6B` | `RubyLLM.rerank` | 0.009 per 1M tokens |
+| `flux` | `RubyLLM.paint`, returns JPEG | 0.30 per minute of compute |
+| `whisper` | `RubyLLM.transcribe` | 0.006 per audio minute |
 
 Photomaker, which needs reference photos on its own route, is not covered.
 
@@ -211,6 +212,22 @@ RubyLLM.transcribe('meeting.m4a', model: 'whisper', provider: :infomaniak, langu
 Infomaniak runs transcriptions as background jobs: the gem uploads the file, then polls until the
 transcript is ready, so the call blocks for about as long as the job takes. Streaming (passing a block)
 is not possible. mp3, mp4, m4a, wav, flac, ogg, opus, aac, wma and webm are accepted.
+
+### Costs
+
+The catalog carries Infomaniak's list prices, so ruby_llm computes costs from the token counts:
+
+```ruby
+response = chat.ask('Summarise this contract.', with: 'contract.txt')
+response.cost.total   # => 0.0021 (CHF)
+chat.cost.total       # the whole conversation
+```
+
+**Costs from this provider are in CHF**, exactly as Infomaniak bills them, although ruby_llm documents its
+prices as USD. Don't add them to costs from other providers without converting. Chat, embedding and
+rerank costs are computed; Flux and Whisper bill per minute, which ruby_llm cannot compute, so their
+prices are only in `model.metadata[:price_per_minute]`. The prices date from 2026-09-30 and live in
+`lib/ruby_llm/providers/infomaniak/pricing.rb`.
 
 ## How Infomaniak differs from OpenAI
 
