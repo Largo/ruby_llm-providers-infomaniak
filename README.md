@@ -50,6 +50,13 @@ Any model id your product serves works as given (`provider: :infomaniak` is enou
 a model catalog, `models.json`, with context sizes and capabilities; once a model is in it,
 `with_thinking` and `with_thinking(false)` work too, and `RubyLLM.models.by_provider(:infomaniak)` lists it.
 
+The catalog is a snapshot from the gem release. To pick up models Infomaniak added since, load the live
+list at boot (two API calls; `RubyLLM.models.refresh!` skips providers that ship a catalog):
+
+```ruby
+RubyLLM::Providers::Infomaniak.refresh_models!
+```
+
 ### Dialect notes
 
 - `reasoning_effort` is an on/off switch at Infomaniak: `:none` turns thinking off, any other effort turns it

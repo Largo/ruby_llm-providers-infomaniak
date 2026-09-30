@@ -67,6 +67,22 @@ module RubyLLM
           true
         end
 
+        # Loads the live model list into RubyLLM.models in place of the
+        # catalog bundled with the gem, so models Infomaniak added since the
+        # release are known with their capabilities. Returns those models.
+        #
+        #   RubyLLM::Providers::Infomaniak.refresh_models!
+        #
+        def refresh_models!(config = RubyLLM.config)
+          live = new(config).list_models
+          registry = RubyLLM.models
+          others = registry.all_including_unlisted.reject { |model| model.provider == slug }
+          # RubyLLM has no public way to replace one provider's entries, and
+          # RubyLLM.models.refresh! skips providers that ship a catalog.
+          registry.instance_variable_set(:@models, others + live)
+          live
+        end
+
         def product_ids # :nodoc:
           @product_ids ||= {}
         end

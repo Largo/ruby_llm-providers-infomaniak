@@ -221,6 +221,22 @@ class InfomaniakModelsTest < Minitest::Test
     assert models.first.supports?(:function_calling)
   end
 
+  def test_refresh_models_replaces_the_bundled_catalog
+    stub_request(:get, "#{API_BASE}/models").to_return(json(object: 'list', data: [{ id: 'acme/Brand-New-9B' }]))
+    stub_request(:get, "#{API_HOST}/1/ai/models").to_return(json(result: 'success', data: [
+      { name: 'acme/Brand-New-9B', type: 'llm', max_token_input: 32_000 }
+    ]))
+    before = RubyLLM.models.all_including_unlisted.dup
+
+    RubyLLM::Providers::Infomaniak.refresh_models!
+
+    assert_equal 32_000, RubyLLM.models.find('acme/Brand-New-9B', provider: :infomaniak).context_window
+    assert_equal ['acme/Brand-New-9B'], RubyLLM.models.by_provider(:infomaniak).map(&:id)
+    assert_operator RubyLLM.models.all.size, :>, 1, 'other providers must stay in the registry'
+  ensure
+    RubyLLM.models.instance_variable_set(:@models, before)
+  end
+
   def test_embeddings
     stub_request(:post, "#{API_BASE}/embeddings").to_return(json(
       object: 'list', model: 'bge_multilingual_gemma2',
