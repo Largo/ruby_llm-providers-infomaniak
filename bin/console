@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative '../test/env'
+require 'irb'
+
+# chat                    -> new chat on INFOMANIAK_MODEL (moonshotai/Kimi-K2.6)
+# chat('qwen3')           -> another model the product serves
+def chat(model = INFOMANIAK_MODEL) = RubyLLM.chat(model: model, provider: :infomaniak)
+
+def models = RubyLLM::Provider.resolve!(:infomaniak).new(RubyLLM.config).list_models
+
+class Weather < RubyLLM::Tool
+  description 'Current temperature for a city'
+  parameter :city, description: 'City name'
+  def execute(city:) = "#{city}: 17 degrees C, light rain"
+end
+
+warn 'INFOMANIAK_API_KEY is not set: put it in test/.env (template: test/.env.example).' unless RubyLLM.config.infomaniak_api_key
+
+puts <<~HELP
+  ruby_llm + Infomaniak AI Tools (#{INFOMANIAK_MODEL}). Try:
+    c = chat
+    c.ask('Hello!').content
+    c.ask('Tell me a story') { |chunk| print chunk.content }
+    chat.with_tools(Weather).ask('Weather in Zurich?').content
+    chat.with_schema({ type: 'object', properties: { city: { type: 'string' } }, required: ['city'] })
+        .ask('Capital of Switzerland?').content
+    chat.with_thinking(effort: :none).ask('Quick: 17 * 23?').content    # thinking off
+    r = chat.ask('Is 1001 prime?'); r.thinking&.text                    # thinking on (default)
+    chat.ask('What is in this picture?', with: 'path/to/image.png').content
+    models.map(&:id)
+HELP
+IRB.start(__FILE__)

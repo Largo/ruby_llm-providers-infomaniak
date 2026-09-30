@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        ruby: ['3.2', '3.3', '3.4', '4.0']
+        include:
+          - os: windows-latest
+            ruby: '4.0'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake test
+      - run: gem build ruby_llm-providers-infomaniak.gemspec

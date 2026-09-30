@@ -1,0 +1,31 @@
+name: release
+
+# Push a tag like v0.1.0 (matching lib/ruby_llm/providers/infomaniak/version.rb) to publish.
+# Publishing uses RubyGems trusted publishing (OIDC): no API key secret. Setup: RELEASING.md.
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release # must match the environment of the trusted publisher on rubygems.org
+    permissions:
+      contents: write # GitHub release
+      id-token: write # RubyGems trusted publishing
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+      - run: bundle exec rake check_tag test
+      # Exchanges the OIDC token for a short-lived RubyGems key, then runs `rake release`
+      # (build to pkg/, tag already present, gem push) and waits until the gem is live.
+      - uses: rubygems/release-gem@v1
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" pkg/*.gem --title "$GITHUB_REF_NAME" --notes-file CHANGELOG.md

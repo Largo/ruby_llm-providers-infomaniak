@@ -1,0 +1,403 @@
+[
+  {
+    "id": "bge_multilingual_gemma2",
+    "name": "bge_multilingual_gemma2",
+    "provider": "infomaniak",
+    "family": null,
+    "created_at": "2024-12-03 23:00:00 UTC",
+    "context_window": 8000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "embeddings"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "embedding",
+      "description": "Bge Multilingual Gemma2",
+      "version": "1.0",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings"
+    }
+  },
+  {
+    "id": "mini_lm_l12_v2",
+    "name": "mini_lm_l12_v2",
+    "provider": "infomaniak",
+    "family": null,
+    "created_at": "2024-12-03 23:00:00 UTC",
+    "context_window": 128,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "embeddings"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "embedding",
+      "description": "All MiniLM L12 v2",
+      "version": "2.0",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings"
+    }
+  },
+  {
+    "id": "Qwen/Qwen3-Embedding-8B",
+    "name": "Qwen/Qwen3-Embedding-8B",
+    "provider": "infomaniak",
+    "family": "qwen",
+    "created_at": "2025-11-23 23:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "embeddings"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "embedding",
+      "description": "Qwen/Qwen3-Embedding-8B",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/embeddings"
+    }
+  },
+  {
+    "id": "mistralai/Ministral-3-14B-Instruct-2512",
+    "name": "mistralai/Ministral-3-14B-Instruct-2512",
+    "provider": "infomaniak",
+    "family": "mistralai",
+    "created_at": "2026-02-01 23:00:00 UTC",
+    "context_window": 100000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "mistralai/Ministral-3-14B-Instruct-2512",
+      "status": "ready",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions"
+    }
+  },
+  {
+    "id": "Qwen/Qwen3.5-122B-A10B-FP8",
+    "name": "Qwen/Qwen3.5-122B-A10B-FP8",
+    "provider": "infomaniak",
+    "family": "qwen",
+    "created_at": null,
+    "context_window": 200000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision",
+      "reasoning"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "Qwen/Qwen3.5-122B-A10B-FP8",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "reasoning_options": [
+        {
+          "type": "effort",
+          "values": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "google/gemma-4-31B-it",
+    "name": "google/gemma-4-31B-it",
+    "provider": "infomaniak",
+    "family": "google",
+    "created_at": null,
+    "context_window": 100000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision",
+      "reasoning"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "google/gemma-4-31B-it",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "reasoning_options": [
+        {
+          "type": "effort",
+          "values": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "moonshotai/Kimi-K2.6",
+    "name": "moonshotai/Kimi-K2.6",
+    "provider": "infomaniak",
+    "family": "moonshotai",
+    "created_at": null,
+    "context_window": 256000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision",
+      "reasoning"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "moonshotai/Kimi-K2.6",
+      "status": "coming_soon",
+      "beta": true,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "reasoning_options": [
+        {
+          "type": "effort",
+          "values": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "mistralai/Mistral-Small-4-119B-2603",
+    "name": "mistralai/Mistral-Small-4-119B-2603",
+    "provider": "infomaniak",
+    "family": "mistralai",
+    "created_at": null,
+    "context_window": 256000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision",
+      "reasoning"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "mistralai/Mistral-Small-4-119B-2603",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "reasoning_options": [
+        {
+          "type": "effort",
+          "values": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "Qwen/Qwen3.5-397B-A17B-FP8",
+    "name": "Qwen/Qwen3.5-397B-A17B-FP8",
+    "provider": "infomaniak",
+    "family": "qwen",
+    "created_at": null,
+    "context_window": 200000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision",
+      "reasoning"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "Qwen/Qwen3.5-397B-A17B-FP8",
+      "status": "coming_soon",
+      "beta": true,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions",
+      "reasoning_options": [
+        {
+          "type": "effort",
+          "values": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "swiss-ai/Apertus-v1.5-70B",
+    "name": "swiss-ai/Apertus-v1.5-70B",
+    "provider": "infomaniak",
+    "family": "swiss-ai",
+    "created_at": null,
+    "context_window": 100000,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "json_mode",
+      "vision"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "system",
+      "type": "llm",
+      "description": "swiss-ai/Apertus-v1.5-70B",
+      "status": "coming_soon",
+      "beta": true,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions"
+    }
+  }
+]
