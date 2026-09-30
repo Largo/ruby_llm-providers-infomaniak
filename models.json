@@ -399,5 +399,119 @@
       "coder": false,
       "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions"
     }
+  },
+  {
+    "id": "whisper",
+    "name": "whisper",
+    "provider": "infomaniak",
+    "family": null,
+    "created_at": null,
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "audio"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "type": "stt",
+      "description": "Whisper V3",
+      "version": "3.0",
+      "status": "ready",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/1/ai/%7Bproduct_id%7D/openai/audio/transcriptions"
+    }
+  },
+  {
+    "id": "flux",
+    "name": "flux",
+    "provider": "infomaniak",
+    "family": null,
+    "created_at": null,
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "image"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "type": "image",
+      "description": "Flux schnell",
+      "version": "0.1",
+      "status": "ready",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/1/ai/%7Bproduct_id%7D/openai/images/generations"
+    }
+  },
+  {
+    "id": "BAAI/bge-reranker-v2-m3",
+    "name": "BAAI/bge-reranker-v2-m3",
+    "provider": "infomaniak",
+    "family": "baai",
+    "created_at": null,
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "rerank"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "type": "reranker",
+      "description": "BAAI/bge-reranker-v2-m3",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/cohere/v2/rerank"
+    }
+  },
+  {
+    "id": "Qwen/Qwen3-Reranker-0.6B",
+    "name": "Qwen/Qwen3-Reranker-0.6B",
+    "provider": "infomaniak",
+    "family": "qwen",
+    "created_at": null,
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "rerank"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "type": "reranker",
+      "description": "Qwen/Qwen3-Reranker-0.6B",
+      "status": "coming_soon",
+      "beta": false,
+      "coder": false,
+      "documentation": "https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/cohere/v2/rerank"
+    }
   }
 ]

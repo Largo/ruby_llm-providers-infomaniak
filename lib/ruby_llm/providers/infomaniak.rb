@@ -5,12 +5,14 @@ require_relative 'infomaniak/version'
 require_relative 'infomaniak/chat'
 require_relative 'infomaniak/models'
 require_relative 'infomaniak/rerank'
+require_relative 'infomaniak/media'
 
 module RubyLLM
   module Providers
     # Infomaniak AI Tools: OpenAI-compatible chat completions, embeddings and
     # model listing under https://api.infomaniak.com/2/ai/{product_id}/openai/v1,
-    # reranking under .../{product_id}/cohere/v2.
+    # reranking under /2/ai/{product_id}/cohere/v2, and image generation and
+    # transcription under /1/ai/{product_id}/openai.
     class Infomaniak < Provider
       API_HOST = 'https://api.infomaniak.com'
 
@@ -22,9 +24,21 @@ module RubyLLM
 
       protocol :chat_completions, ChatCompletions
       protocol :rerank, CohereRerank
+      protocol :media, Media
 
       def protocol_for(model, operation: nil, **)
-        operation == :rerank ? protocols[:rerank] : super
+        case operation
+        when :rerank then protocols[:rerank]
+        when :paint, :transcribe then protocols[:media]
+        else super
+        end
+      end
+
+      # The URL of +path+ under the product on API +version+ (1 or 2), derived
+      # from api_base so an override moves every route along.
+      def product_url(version, path)
+        base = api_base.delete_suffix('/').delete_suffix('/openai/v1')
+        "#{base.sub(%r{/2/ai/}, "/#{version}/ai/")}/#{path}"
       end
 
       def api_base
@@ -61,7 +75,7 @@ module RubyLLM
 
       class << self
         def configuration_options
-          %i[infomaniak_api_key infomaniak_product_id infomaniak_api_base]
+          %i[infomaniak_api_key infomaniak_product_id infomaniak_api_base infomaniak_poll_interval]
         end
 
         def configuration_requirements

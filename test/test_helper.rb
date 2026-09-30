@@ -4,7 +4,7 @@
 require 'bundler/setup'
 require 'minitest/autorun'
 require 'webmock/minitest'
-require 'tempfile'
+require 'fileutils'
 require 'ruby_llm/providers/infomaniak'
 
 module InfomaniakTestHelpers
@@ -63,10 +63,16 @@ module InfomaniakTestHelpers
     json(result: 'success', data: ids.map { |id| { product_id: id, product_name: 'LLM API', account_name: 'Alos', status: 'ok' } })
   end
 
+  # Attachment fixtures live in the gitignored tmp/test, cleared when a run starts:
+  # ruby_llm keeps uploaded files open, and Windows cannot delete open files.
+  FIXTURE_DIR = File.expand_path('../tmp/test', __dir__)
+  Fixture = Struct.new(:path) { def unlink = nil }
+  FileUtils.rm_rf(FIXTURE_DIR)
+
   def tempfile(extension, content)
-    file = Tempfile.new(['attachment', extension], binmode: true)
-    file.write(content)
-    file.close
-    file
+    FileUtils.mkdir_p(FIXTURE_DIR)
+    path = File.join(FIXTURE_DIR, "attachment-#{Process.pid}-#{rand(1_000_000)}#{extension}")
+    File.binwrite(path, content)
+    Fixture.new(path)
   end
 end

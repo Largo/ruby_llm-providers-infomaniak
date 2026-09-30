@@ -9,7 +9,7 @@ module RubyLLM
         include Protocols::Cohere::Rerank
 
         def rerank_url
-          "#{@provider.api_base.delete_suffix('/').delete_suffix('/openai/v1')}/cohere/v2/rerank"
+          @provider.product_url(2, 'cohere/v2/rerank')
         end
 
         def parse_rerank_response(response, model:, documents: [])

@@ -241,10 +241,12 @@ class InfomaniakModelsTest < Minitest::Test
     stub_request(:get, "#{API_BASE}/models").to_return(json(object: 'list', data: [{ id: MODEL }]))
     stub_request(:get, "#{API_HOST}/1/ai/models").to_return(json(result: 'success', data: [
       { name: MODEL, type: 'llm' }, { name: 'BAAI/bge-reranker-v2-m3', type: 'reranker', max_token_input: 8192 },
-      { name: 'flux', type: 'image' }
+      { name: 'flux', type: 'image' }, { name: 'photomaker', type: 'image' }, { name: 'whisper', type: 'stt' }
     ]))
 
-    assert_equal [[MODEL, :chat], ['BAAI/bge-reranker-v2-m3', :rerank]], provider.list_models.map { [_1.id, _1.type] }
+    assert_equal [[MODEL, :chat], ['BAAI/bge-reranker-v2-m3', :rerank], ['flux', :image], ['whisper', :chat]],
+                 provider.list_models.map { [_1.id, _1.type] }
+    assert_equal %w[audio], provider.list_models.last.modalities.input
   end
 
   def test_rerank
@@ -259,6 +261,69 @@ class InfomaniakModelsTest < Minitest::Test
     assert_requested stub
     assert_equal [%w[Osmium 0.93], %w[Tin 0.02]], rerank.results.map { [_1.document, _1.score.to_s] }
     assert_equal 21, rerank.tokens.input
+  end
+
+  V1 = "#{API_HOST}/1/ai/#{PRODUCT_ID}".freeze
+  JPEG = ["\xFF\xD8\xFF\xE0".b + ('x' * 20)].pack('m0')
+
+  def test_paint_detects_the_image_type
+    stub = stub_request(:post, "#{V1}/openai/images/generations")
+           .with(body: hash_including(model: 'flux', prompt: 'A marmot', size: '1024x1024'))
+           .to_return(json(created: 1, data: [{ b64_json: JPEG }]))
+
+    image = RubyLLM.paint('A marmot', model: 'flux', provider: :infomaniak, size: '1024x1024')
+
+    assert_requested stub
+    assert_equal 'image/jpeg', image.mime_type
+    assert image.to_blob.start_with?("\xFF\xD8\xFF".b)
+  end
+
+  def test_paint_cannot_edit_images
+    assert_raises(ArgumentError) do
+      RubyLLM.paint('Add a hat', model: 'flux', provider: :infomaniak, size: '1024x1024', with: __FILE__)
+    end
+  end
+
+  def test_transcribe_polls_the_batch
+    RubyLLM.config.infomaniak_poll_interval = 0
+    stub_request(:post, "#{V1}/openai/audio/transcriptions").to_return(json(batch_id: 'b-1'))
+    results = stub_request(:get, "#{V1}/results/b-1").to_return(
+      json(status: 'pending'), json(status: 'processing'),
+      json(status: 'success', url: "#{V1}/results/b-1/download", data: '{"text":"Grüezi mitenand"}')
+    )
+    audio = tempfile('.wav', 'RIFF....WAVEfmt ')
+
+    transcription = RubyLLM.transcribe(audio.path, model: 'whisper', provider: :infomaniak)
+
+    assert_equal 'Grüezi mitenand', transcription.text
+    assert_requested results, times: 3
+  ensure
+    audio&.unlink
+  end
+
+  def test_transcribe_downloads_when_the_result_is_not_inline
+    RubyLLM.config.infomaniak_poll_interval = 0
+    stub_request(:post, "#{V1}/openai/audio/transcriptions").to_return(json(batch_id: 'b-2'))
+    stub_request(:get, "#{V1}/results/b-2").to_return(json(status: 'success', url: "#{V1}/results/b-2/download"))
+    stub_request(:get, "#{V1}/results/b-2/download").to_return(json(text: 'Merci vielmal'))
+    audio = tempfile('.wav', 'RIFF....WAVEfmt ')
+
+    assert_equal 'Merci vielmal', RubyLLM.transcribe(audio.path, model: 'whisper', provider: :infomaniak).text
+  ensure
+    audio&.unlink
+  end
+
+  def test_transcribe_failure_and_streaming
+    RubyLLM.config.infomaniak_poll_interval = 0
+    stub_request(:post, "#{V1}/openai/audio/transcriptions").to_return(json(batch_id: 'b-3'))
+    stub_request(:get, "#{V1}/results/b-3").to_return(json(status: 'failed'))
+    audio = tempfile('.wav', 'RIFF....WAVEfmt ')
+
+    error = assert_raises(RubyLLM::Error) { RubyLLM.transcribe(audio.path, model: 'whisper', provider: :infomaniak) }
+    assert_includes error.message, 'failed'
+    assert_raises(RubyLLM::Error) { RubyLLM.transcribe(audio.path, model: 'whisper', provider: :infomaniak) { nil } }
+  ensure
+    audio&.unlink
   end
 
   def test_embeddings

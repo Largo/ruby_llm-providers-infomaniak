@@ -19,14 +19,18 @@ module RubyLLM
         EMBEDDING = /embed|bge|\be5\b|gte|mini_?lm/i
 
         # Catalog types served outside the OpenAI endpoint, so missing from its list.
-        OTHER_ENDPOINT_TYPES = %w[reranker].freeze
+        OTHER_ENDPOINT_TYPES = %w[reranker image stt].freeze
+        # Photomaker needs its own route with reference photos, which the gem does not cover.
+        UNSUPPORTED = /photo_?maker/i
 
         def list_models
           details = catalog_details
           listed = listed_models(@connection.get(models_url))
           listed_ids = listed.map { |entry| entry['id'].to_s.downcase }
           elsewhere = details.values.select do |entry|
-            OTHER_ENDPOINT_TYPES.include?(entry['type']) && !listed_ids.include?(entry['name'].to_s.downcase)
+            name = entry['name'].to_s
+            OTHER_ENDPOINT_TYPES.include?(entry['type']) && !name.match?(UNSUPPORTED) &&
+              !listed_ids.include?(name.downcase)
           end
 
           listed.map { |entry| build_model(entry, details_for(details, entry['id'])) } +

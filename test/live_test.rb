@@ -70,6 +70,25 @@ class InfomaniakLiveTest < Minitest::Test
     assert_operator rerank.results.first.score, :>, rerank.results.last.score
   end
 
+  def test_image_generation
+    image = RubyLLM.paint('A red Swiss train on a viaduct', model: 'flux', provider: :infomaniak, size: '1024x1024')
+
+    assert_match %r{\Aimage/}, image.mime_type
+    assert_operator image.to_blob.bytesize, :>, 10_000
+  end
+
+  # A 1 s tone: checks the asynchronous upload and polling, not recognition.
+  def test_transcription
+    RubyLLM.config.infomaniak_poll_interval = 1
+    pcm = Array.new(16_000) { |i| (Math.sin(i / 5.8) * 8000).round }.pack('s<*')
+    header = ['RIFF', 36 + pcm.bytesize, 'WAVE', 'fmt ', 16, 1, 1, 16_000, 32_000, 2, 16, 'data', pcm.bytesize]
+    # In the gitignored tmp/: ruby_llm keeps the upload open, so Windows could not delete a Tempfile.
+    path = File.expand_path("../tmp/tone-#{Process.pid}.wav", __dir__)
+    File.binwrite(path, header.pack('A4VA4A4VvvVVvvA4V') + pcm)
+
+    assert_kind_of String, RubyLLM.transcribe(path, model: 'whisper', provider: :infomaniak).text
+  end
+
   def test_embeddings
     skip 'Set INFOMANIAK_EMBEDDING_MODEL in test/.env' unless INFOMANIAK_EMBEDDING_MODEL
 

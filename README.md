@@ -17,6 +17,7 @@ chat.ask('Explain Ruby blocks in one sentence.').content
 ```
 
 - Chat, streaming, tool calling, structured output, image input, embeddings
+- Reranking, image generation (Flux) and transcription (Whisper)
 - Thinking on/off per request, with the model's reasoning on `response.thinking`
 - Only an API token to configure: the AI Tools product is looked up for you
 - A model catalog with context sizes and capabilities, refreshable at runtime
@@ -60,7 +61,8 @@ caches the answer per token.
 |---|---|---|
 | `infomaniak_api_key` | required | API token with the AI Tools scope |
 | `infomaniak_product_id` | looked up | The product to bill. Set it when the token reaches several products (the error lists them) or to skip the lookup |
-| `infomaniak_api_base` | `https://api.infomaniak.com/2/ai/{product_id}/openai/v1` | Override for a proxy or gateway |
+| `infomaniak_api_base` | `https://api.infomaniak.com/2/ai/{product_id}/openai/v1` | Override for a proxy or gateway. Rerank, image and transcription routes are derived from it |
+| `infomaniak_poll_interval` | `2` | Seconds between checks while a transcription runs (bounded by `request_timeout`) |
 
 ## Models
 
@@ -84,9 +86,13 @@ Your product lists its own with `bundle exec rake models`, or live with
 | `bge_multilingual_gemma2` | 8000 |
 | `mini_lm_l12_v2` | 128 |
 
-Infomaniak also lists image generation (Flux, Photomaker), transcription (Whisper) and rerankers
-(`BAAI/bge-reranker-v2-m3`, `Qwen/Qwen3-Reranker-0.6B`). They live on other endpoints this gem does not
-cover yet.
+| Other models | For |
+|---|---|
+| `BAAI/bge-reranker-v2-m3`, `Qwen/Qwen3-Reranker-0.6B` | `RubyLLM.rerank` |
+| `flux` | `RubyLLM.paint`, returns JPEG |
+| `whisper` | `RubyLLM.transcribe` |
+
+Photomaker, which needs reference photos on its own route, is not covered.
 
 ### The model catalog
 
@@ -175,6 +181,37 @@ chat.ask('What is on this receipt?', with: 'receipt.jpg').content
 RubyLLM.embed('Grüezi mitenand', model: 'Qwen/Qwen3-Embedding-8B', provider: :infomaniak).vectors
 ```
 
+### Reranking
+
+Sort retrieved passages by relevance before handing them to a chat model:
+
+```ruby
+rerank = RubyLLM.rerank('Which metal is the densest?', passages,
+                        model: 'BAAI/bge-reranker-v2-m3', provider: :infomaniak, top_n: 3)
+rerank.results.map { |result| [result.score, result.document] }
+```
+
+### Image generation
+
+```ruby
+image = RubyLLM.paint('A red Swiss train crossing a stone viaduct, watercolor',
+                      model: 'flux', provider: :infomaniak, size: '1024x1024') # or 1024x1792, 1792x1024
+image.save('train.jpg')
+```
+
+Prompts work best in English, and are limited to 77 tokens. Infomaniak's extra options pass through
+`provider_options:`, e.g. `provider_options: { style: 'photographic' }`.
+
+### Transcription
+
+```ruby
+RubyLLM.transcribe('meeting.m4a', model: 'whisper', provider: :infomaniak, language: 'de').text
+```
+
+Infomaniak runs transcriptions as background jobs: the gem uploads the file, then polls until the
+transcript is ready, so the call blocks for about as long as the job takes. Streaming (passing a block)
+is not possible. mp3, mp4, m4a, wav, flac, ogg, opus, aac, wma and webm are accepted.
+
 ## How Infomaniak differs from OpenAI
 
 The gem handles these, so the RubyLLM API behaves as usual:
@@ -189,6 +226,10 @@ The gem handles these, so the RubyLLM API behaves as usual:
 | End user | `user` field | `with_end_user('id')` is sent as `user` |
 | Prompt caching | Repeated prompt prefixes answer faster, but no cached-token counts come back and `prompt_cache_key` has no visible effect | `with_caching` options are not sent; keep long shared context (instructions, documents) at the start of the conversation to benefit |
 | Errors | `{"error": {"code", "description"}}` on its own endpoints | The description ends up in the `RubyLLM::Error` message |
+| Routes | Chat and embeddings on `/2/.../openai/v1`, rerank on `/2/.../cohere/v2`, images and transcription on `/1/.../openai` | Each call goes to its route |
+| Reranking | Cohere v2 format, usage as `usage.total_tokens` | Read into `rerank.tokens.input` |
+| Images | Only base64 JPEG, no edits | The image type is read from the bytes; `with:` raises `ArgumentError` |
+| Transcription | Asynchronous: upload returns a batch id, results are polled | Polls every `infomaniak_poll_interval` seconds until done, failed or `request_timeout` |
 
 ## Development
 

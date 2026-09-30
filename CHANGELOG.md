@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Reranking (`RubyLLM.rerank`) with `BAAI/bge-reranker-v2-m3` and `Qwen/Qwen3-Reranker-0.6B`, on the
+  Cohere-compatible endpoint.
+- Image generation (`RubyLLM.paint`) with Flux; the image type is read from the returned bytes (JPEG).
+- Transcription (`RubyLLM.transcribe`) with Whisper, polling Infomaniak's asynchronous results
+  (`infomaniak_poll_interval`).
+- The model catalog now also lists the rerankers, Flux and Whisper.
+- Author name: Andi Idogawa.
+
 ## 0.1.0
 
 - First release: `infomaniak` provider for RubyLLM 2.x on Infomaniak AI Tools' OpenAI-compatible API, with
