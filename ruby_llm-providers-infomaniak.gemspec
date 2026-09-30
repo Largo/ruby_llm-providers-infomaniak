@@ -6,7 +6,7 @@ version = File.read(File.expand_path('lib/ruby_llm/providers/infomaniak/version.
 Gem::Specification.new do |spec|
   spec.name = 'ruby_llm-providers-infomaniak'
   spec.version = version
-  spec.authors = ['Andreas Idogawa']
+  spec.authors = ['Andi Idogawa']
   spec.email = ['web@idogawa.com']
   spec.summary = 'RubyLLM provider for Infomaniak AI Tools'
   spec.description = 'Use the models hosted by Infomaniak AI Tools in Switzerland (Kimi, Qwen, Apertus, Mistral, ...) ' \
