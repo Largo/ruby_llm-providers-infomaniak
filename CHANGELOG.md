@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.1
 
 - `RubyLLM.paint` without `size:` works: the size is left out instead of being sent as null,
   which Infomaniak rejected.
