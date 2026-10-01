@@ -19,6 +19,11 @@ module RubyLLM
           @provider.product_url(1, 'openai/images/generations')
         end
 
+        # Infomaniak rejects "size": null, so a paint call without size: leaves it out.
+        def render_image_payload(prompt, model:, size:, **)
+          super.compact
+        end
+
         def validate_paint_inputs!(with:, mask:)
           raise ArgumentError, 'Infomaniak generates images from a prompt only; it cannot edit images' if editing?(with, mask)
         end

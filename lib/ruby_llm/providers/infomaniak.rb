@@ -65,13 +65,16 @@ module RubyLLM
         @account_connection ||= Transport::Connection.new(self, @config, api_base: API_HOST)
       end
 
-      # Infomaniak's own endpoints answer {"result":"error","error":{"code":..,"description":..}}.
+      # Infomaniak's own endpoints answer {"result":"error","error":{"code":..,"description":..}},
+      # with the specifics of a validation failure in error.errors[].description.
       def parse_error(response)
         body = parse_error_body(response)
         error = body['error'] if body.is_a?(Hash)
         return super unless error.is_a?(Hash) && error['description']
 
-        [error['description'], error['code']].compact.uniq.join(' - ')
+        details = Array(error['errors']).filter_map { |item| item['description'] if item.is_a?(Hash) }
+        message = details.any? ? "#{error['description']}: #{details.join(' ')}" : error['description']
+        error['code'] ? "#{message} (#{error['code']})" : message
       end
 
       class << self

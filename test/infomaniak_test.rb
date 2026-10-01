@@ -281,6 +281,27 @@ class InfomaniakModelsTest < Minitest::Test
     assert image.to_blob.start_with?("\xFF\xD8\xFF".b)
   end
 
+  def test_paint_without_size_leaves_it_out
+    stub = stub_request(:post, "#{V1}/openai/images/generations")
+           .with { |request| !JSON.parse(request.body).key?('size') }
+           .to_return(json(created: 1, data: [{ b64_json: JPEG }]))
+
+    RubyLLM.paint('A marmot', model: 'flux', provider: :infomaniak)
+
+    assert_requested stub
+  end
+
+  def test_validation_errors_carry_the_details
+    stub_request(:post, "#{V1}/openai/images/generations").to_return(json({
+      result: 'error',
+      error: { code: 'validation_failed', description: 'Validation failed',
+               errors: [{ code: 'validation_rule_filled', description: 'The size field must have a value.' }] }
+    }, 422))
+
+    error = assert_raises(RubyLLM::Error) { RubyLLM.paint('A marmot', model: 'flux', provider: :infomaniak, size: '') }
+    assert_equal 'Validation failed: The size field must have a value. (validation_failed)', error.message
+  end
+
   def test_paint_cannot_edit_images
     assert_raises(ArgumentError) do
       RubyLLM.paint('Add a hat', model: 'flux', provider: :infomaniak, size: '1024x1024', with: __FILE__)

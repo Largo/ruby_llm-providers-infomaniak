@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `RubyLLM.paint` without `size:` works: the size is left out instead of being sent as null,
+  which Infomaniak rejected.
+- Error messages include Infomaniak's validation details, e.g.
+  "Validation failed: The size field must have a value. (validation_failed)".
+
 ## 0.2.0
 
 - Reranking (`RubyLLM.rerank`) with `BAAI/bge-reranker-v2-m3` and `Qwen/Qwen3-Reranker-0.6B`, on the
